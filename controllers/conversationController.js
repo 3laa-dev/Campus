@@ -20,3 +20,13 @@ exports.createConversation = asyncHandler(async (req, res, next) => {
     data: conversation,
   });
 });
+exports.getAllConversation = asyncHandler(async (req, res, next) => {
+  const conversations = await Conversation.find({
+    participants: req.user._id,
+  });
+
+  res.status(200).json({
+    status: "success",
+    data: conversations,
+  });
+});

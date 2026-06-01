@@ -25,11 +25,9 @@ exports.sendMessage = asyncHandler(async (req, res, next) => {
 
 
 exports.getMessages = asyncHandler(async (req, res, next) => {
-  const { conversationId } = req.params;
+  const { id : conversationId } = req.params;
 
   const messages = await Message.find({ conversationId })
-    .populate("sender", "email")
-    .sort({ createdAt: 1 });
 
   res.status(200).json({
     status: "success",

@@ -15,9 +15,9 @@ const projectRoute = require("./routes/projectRoute");
 const authRoute = require("./routes/authRoute");
 const conversationRoute = require("./routes/conversationRoute");
 const userRoute = require("./routes/userRoute");
-
-
-
+const likeRoute = require("./routes/likeRoute");
+const commentRoute = require("./routes/commetRoute");
+const messagesRoute = require("./routes/messagesRoute")
 
 const User = require("./models/userModel");
 const Message = require("./models/messageModel");
@@ -32,6 +32,9 @@ app.use("/projects", projectRoute);
 app.use("/auth", authRoute);
 app.use("/conversations", conversationRoute);
 app.use("/users", userRoute);
+app.use("/like", likeRoute);
+app.use("/comment" ,commentRoute)
+app.use("/messages",messagesRoute);
 
 app.use((error, req, res, next) => {
   res.status(error.statusCode || 500).json({
