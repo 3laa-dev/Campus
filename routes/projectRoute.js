@@ -4,7 +4,7 @@ const auth = require("../controllers/authController");
 
 
 router.route("/")
-    .post(auth.protect , auth.allowedTo("admin"),  
+    .post(auth.protect , auth.allowedTo("student"),  
         (req, res, next) => {
             req.body.image = req.file.filename;
             req.body.user = req.user._id
