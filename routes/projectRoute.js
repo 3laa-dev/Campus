@@ -5,6 +5,10 @@ const auth = require("../controllers/authController");
 
 router.route("/")
     .post(auth.protect , auth.allowedTo("student"),  
+        (req, res, next) => {
+            req.body.user = req.user._id
+            next()
+        },
         controller.createProject)
     .get(auth.protect , auth.allowedTo("student") , controller.getAllProjects);
 
