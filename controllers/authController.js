@@ -148,25 +148,18 @@ exports.forgotPassword = asyncHandler(async (req, res, next) => {
   await user.save();
 
 
-  // E-postayı gönder (Production Mode)
-  try {
-    await sendMail({ 
-      message: `Merhaba ${user.name},\n\nCampusHUB şifre sıfırlama kodunuz: ${resetCode}\n\nBu kod 10 dakika boyunca geçerlidir.`, 
-      email: user.email, 
-      subject: "CampusHUB - Şifre Sıfırlama Kodunuz" 
-    });
-    
-    // İşlem başarılıysa sadece onay dönüyoruz, kodu (debugCode) ekranda göstermiyoruz.
-    res.status(200).json({ 
-      status: "success", 
-      message: "Şifre sıfırlama kodu e-posta adresinize gönderildi." 
-    });
-  } catch (err) {
-    console.error("SMTP Mail Gönderim Hatası:", err.message);
-    const error = new Error("E-posta gönderilirken bir hata oluştu. Lütfen daha sonra tekrar deneyin.");
-    error.statusCode = 500;
-    return next(error);
-  }
+  // E-postayı arka planda gönderiyoruz ki sunucu bağlantıyı koparmasın (Connection Abort)
+  sendMail({ 
+    message: `Merhaba ${user.name},\n\nCampusHUB şifre sıfırlama kodunuz: ${resetCode}\n\nBu kod 10 dakika boyunca geçerlidir.`, 
+    email: user.email, 
+    subject: "CampusHUB - Şifre Sıfırlama Kodunuz" 
+  }).catch(err => console.error("SMTP Mail Gönderim Hatası:", err.message));
+  
+  // E-postanın gitmesini beklemeden (sunucu takılmadan) anında başarı yanıtı dön.
+  res.status(200).json({ 
+    status: "success", 
+    message: "Şifre sıfırlama kodu e-posta adresinize gönderildi." 
+  });
 
 })
 
