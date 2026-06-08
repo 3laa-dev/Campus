@@ -129,8 +129,11 @@ exports.allowedTo = (...roles) => {
 
 exports.forgotPassword = asyncHandler(async (req, res, next) => {
   const user = await User.findOne({ email: req.body.email });
-  if (!user)
-    return next(new Error("This user is not found"));
+  if (!user) {
+    const error = new Error("This user is not found");
+    error.statusCode = 404;
+    return next(error);
+  }
 
 
   const resetCode = crypto.randomInt(100000, 999999).toString();;
