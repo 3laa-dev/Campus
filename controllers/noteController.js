@@ -1,8 +1,7 @@
 const Note = require("../models/noteModel");
 const factory = require("./handlersFactory");
-
-
 const asyncHandler = require("express-async-handler");
+const path = require("path");
 
 
 exports.createNote = factory.createOne(Note);
@@ -34,4 +33,17 @@ exports.incrementDownloads = asyncHandler(async (req, res, next) => {
         return res.status(404).json({ status: "fail", message: "Note not found" });
     }
     res.status(200).json({ status: "succses", data: { downloads: note.ratesQuantity } });
+});
+
+// Dosyayı doğrudan indirme olarak sun (Content-Disposition: attachment)
+exports.downloadFile = asyncHandler(async (req, res, next) => {
+    const note = await Note.findById(req.params.id);
+    if (!note || !note.file) {
+        return res.status(404).json({ status: "fail", message: "File not found" });
+    }
+    const filePath = path.join(__dirname, "../uploads/files", note.file);
+    const ext = path.extname(note.file) || '.pdf';
+    const downloadName = `${note.title.replace(/[^a-zA-Z0-9\s]/g, "")}${ext}`;
+    
+    res.download(filePath, downloadName);
 });

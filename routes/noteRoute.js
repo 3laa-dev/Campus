@@ -81,5 +81,6 @@ router
   );
 
 router.post("/:id/download", auth.protect, auth.allowedTo("student"), controller.incrementDownloads);
+router.get("/:id/download-file", controller.downloadFile);
 
 module.exports = router;
