@@ -148,19 +148,27 @@ exports.forgotPassword = asyncHandler(async (req, res, next) => {
   await user.save();
 
 
-  // E-postayı arka planda gönderiyoruz ki sunucu bağlantıyı koparmasın (Connection Abort)
-  sendMail({ 
-    message: `Merhaba ${user.name},\n\nCampusHUB şifre sıfırlama kodunuz: ${resetCode}\n\nBu kod 10 dakika boyunca geçerlidir.`, 
-    email: user.email, 
-    subject: "CampusHUB - Şifre Sıfırlama Kodunuz" 
-  }).catch(err => console.error("SMTP Mail Gönderim Hatası:", err.message));
-  
-  // E-postanın gitmesini beklemeden (sunucu takılmadan) anında başarı yanıtı dön.
-  res.status(200).json({ 
-    status: "success", 
-    message: "Şifre sıfırlama kodu e-posta adresinize gönderildi." 
-  });
+  try {
+    await sendMail({ 
+      message: `Merhaba ${user.name},\n\nCampusHUB şifre sıfırlama kodunuz: ${resetCode}\n\nBu kod 10 dakika boyunca geçerlidir.`, 
+      email: user.email, 
+      subject: "CampusHUB - Şifre Sıfırlama Kodunuz" 
+    });
 
+    res.status(200).json({ 
+      status: "success", 
+      message: "Şifre sıfırlama kodu e-posta adresinize gönderildi." 
+    });
+  } catch (err) {
+    console.error("SMTP Mail Gönderim Hatası:", err);
+    const smtpUser = process.env.SMTP_USER || "osamaakil4@gmail.com";
+    const hasSmtpPass = !!(process.env.SMTP_PASS || "dlnbwsjjehkygynl");
+    res.status(500).json({
+      status: "fail",
+      message: `E-posta gönderilemedi. Hata: ${err.message}. SMTP User: ${smtpUser}, Has Pass: ${hasSmtpPass}`,
+      error: err.toString()
+    });
+  }
 })
 
 
