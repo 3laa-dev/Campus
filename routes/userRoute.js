@@ -35,7 +35,7 @@ router
 
 router
     .route("/:id")
-    .get(auth.protect, auth.allowedTo("admin"), controller.getUser)
+    .get(auth.protect, controller.getUser)
     .put(auth.protect, auth.allowedTo("admin"), (req, res, next) => {
         if (req.body.password)
             return next(new Error("You cant change password"))
