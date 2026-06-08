@@ -4,7 +4,14 @@ const Like = require("../models/likeModel")
 
 
 exports.addLike = factory.createOne(Like);
-exports.removeLike = factory.deleteOne(Like);
+exports.removeLike = asyncHandler(async (req, res, next) => {
+    const result = await Like.findOneAndDelete({ user: req.user._id, post: req.params.id });
+    if (!result) {
+        // Fallback to delete by Like ID just in case
+        await Like.findByIdAndDelete(req.params.id);
+    }
+    res.status(200).json({ status: "success" });
+});
 exports.isLiked = asyncHandler(async (req, res, next) => {
     const like = await Like.findOne({ user: req.user._id , post:req.params.id});
     if (like)

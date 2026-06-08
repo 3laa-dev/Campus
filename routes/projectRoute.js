@@ -17,4 +17,7 @@ router.route("/:id")
     .put(  auth.protect , auth.allowedTo("student") , controller.updateProject)
     .delete( auth.protect , auth.allowedTo("student" , "admin") , controller.deleteProject);
 
+router.post("/:id/star", auth.protect, auth.allowedTo("student"), controller.toggleStar);
+router.post("/:id/view", auth.protect, auth.allowedTo("student"), controller.incrementViews);
+
 module.exports = router;

@@ -16,6 +16,20 @@ const projectSchema = new Schema(
             required: [true, "content is reqiured"]
         },
         githubLink: String,
+        stars: {
+            type: Number,
+            default: 0
+        },
+        views: {
+            type: Number,
+            default: 0
+        },
+        starredBy: [
+            {
+                type: Schema.ObjectId,
+                ref: "User"
+            }
+        ]
 
     }
 )
