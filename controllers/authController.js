@@ -130,7 +130,7 @@ exports.allowedTo = (...roles) => {
 exports.forgotPassword = asyncHandler(async (req, res, next) => {
   const user = await User.findOne({ email: req.body.email });
   if (!user) {
-    const error = new Error("This user is not found");
+    const error = new Error("Bu e-posta adresine kayıtlı bir kullanıcı bulunamadı.");
     error.statusCode = 404;
     return next(error);
   }
@@ -186,7 +186,7 @@ exports.verifyPassResetCode = asyncHandler(async (req, res, next) => {
   );
 
   if (!user)
-    return next(new Error("Reset code invalid or expired"));
+    return next(new Error("Sıfırlama kodu hatalı veya süresi dolmuş"));
 
   user.passwordResetVerified = true;
   await user.save();
@@ -199,10 +199,10 @@ exports.resetPassword = asyncHandler(async (req, res, next) => {
 
   const user = await User.findOne({ email: req.body.email })
   if (!user)
-    return next(new Error("No User with this email"))
+    return next(new Error("Bu e-posta adresine kayıtlı bir kullanıcı bulunamadı"));
 
   if (!user.passwordResetVerified)
-    return next(new Error("Reset Code Not Verified"));
+    return next(new Error("Sıfırlama kodu doğrulanmamış"));
 
 
   user.password = req.body.newPassword;
