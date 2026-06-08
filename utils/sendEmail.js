@@ -12,6 +12,9 @@ module.exports = async (options) => {
             user: smtpUser,
             pass: smtpPass,
         },
+        connectionTimeout: 5000, // 5 saniye
+        greetingTimeout: 5000,
+        socketTimeout: 5000,
         tls: {
             rejectUnauthorized: false
         }
