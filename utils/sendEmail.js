@@ -1,16 +1,24 @@
 const nodemailer = require("nodemailer");
 
 module.exports = async (options) => {
+    const smtpUser = "osamaakil4@gmail.com";
+    const smtpPass = "dlnbwsjjehkygynl";
+
     const transporter = nodemailer.createTransport({
-        service: 'gmail',
+        host: "smtp.gmail.com",
+        port: 587,
+        secure: false, // true for 465, false for 587 (STARTTLS)
         auth: {
-            user: process.env.SMTP_USER || "osamaakil4@gmail.com",
-            pass: process.env.SMTP_PASS || "dlnbwsjjehkygynl",
+            user: smtpUser,
+            pass: smtpPass,
         },
+        tls: {
+            rejectUnauthorized: false
+        }
     });
 
     const emailOpts = {
-        from: `"CampusHUB" <${process.env.SMTP_USER || "osamaakil4@gmail.com"}>`,
+        from: `"CampusHUB" <${smtpUser}>`,
         to: options.email,
         subject: options.subject,
         text: options.message,
