@@ -22,8 +22,9 @@ exports.search = async (req, res, next) => {
                 id: u._id,
                 type: "user",
                 title: u.name,
-                user: u.name,
-                tags: []
+                user: u.username || u.name,
+                profileImage: u.profileImage || "",
+                tags: u.title ? [u.title] : []
             }));
         } else if (type === "post") {
             const posts = await Post.find({
