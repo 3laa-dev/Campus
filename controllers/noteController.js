@@ -22,3 +22,16 @@ exports.getNote = asyncHandler(async (req, res, next) => {
 exports.updateNote = factory.updateOne(Note);
 
 exports.deleteNote = factory.deleteOne(Note);
+
+// İndirme sayısını artır (ratesQuantity)
+exports.incrementDownloads = asyncHandler(async (req, res, next) => {
+    const note = await Note.findByIdAndUpdate(
+        req.params.id,
+        { $inc: { ratesQuantity: 1 } },
+        { new: true }
+    );
+    if (!note) {
+        return res.status(404).json({ status: "fail", message: "Note not found" });
+    }
+    res.status(200).json({ status: "succses", data: { downloads: note.ratesQuantity } });
+});

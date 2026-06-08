@@ -80,4 +80,6 @@ router
     controller.deleteNote
   );
 
+router.post("/:id/download", auth.protect, auth.allowedTo("student"), controller.incrementDownloads);
+
 module.exports = router;
