@@ -30,7 +30,15 @@ exports.register = async (req, res, next) => {
 
     res.status(201).json({
       message: "User created successfully",
-      user,
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        username: user.username,
+        profileImage: user.profileImage,
+        title: user.title,
+        bio: user.bio,
+      },
       token: generateToken(user._id),
     });
   } catch (err) {
@@ -61,7 +69,12 @@ exports.login = async (req, res, next) => {
       message: "Login successful",
       user: {
         id: user._id,
+        name: user.name,
         email: user.email,
+        username: user.username,
+        profileImage: user.profileImage,
+        title: user.title,
+        bio: user.bio,
       },
       token: generateToken(user._id),
     });

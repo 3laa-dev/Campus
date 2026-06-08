@@ -9,7 +9,22 @@ const userSchema = new Schema(
             trim: true,
             required: [true, "name required"]
         },
-        
+        username: {
+            type: String,
+            trim: true,
+            unique: true,
+            sparse: true
+        },
+        title: {
+            type: String,
+            trim: true,
+            default: "Öğrenci"
+        },
+        bio: {
+            type: String,
+            trim: true,
+            default: "CampusHUB üyesi."
+        },
         email: {
             type: String,
             required: true,
