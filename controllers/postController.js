@@ -2,11 +2,22 @@ const Post = require("../models/postModel");
 const factory = require("./handlersFactory");
 
 
+const asyncHandler = require("express-async-handler");
+
+
 exports.createPost = factory.createOne(Post);
 
-exports.getAllPosts =  factory.getAll(Post);
+// Gönderiyi paylaşan kullanıcının bilgilerini (user) doldurarak getiriyoruz
+exports.getAllPosts = asyncHandler(async (req, res, next) => {
+    const posts = await Post.find().populate("user");
+    res.status(200).json({ status: "succses", data: posts });
+});
 
-exports.getPost = factory.getOne(Post);
+// Belirli bir gönderiyi detayları ve paylaşan kullanıcı bilgileriyle getiriyoruz
+exports.getPost = asyncHandler(async (req, res, next) => {
+    const post = await Post.findById(req.params.id).populate("user");
+    res.status(200).json({ status: "succses", data: post });
+});
 
 exports.updatePost = factory.updateOne(Post);
 

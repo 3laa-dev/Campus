@@ -5,6 +5,7 @@ const asyncHandler = require("express-async-handler");
 
 exports.createComment = factory.createOne(Comment);
 exports.getAllCommentsOnPost = asyncHandler(async(req , res , next)=>{
-    const comments = await Comment.find({post : req.params.id});
-     res.status(200).json({ status: "succses", data: comments })
+    // Gönderiye yapılan yorumları, yorumu yapan kullanıcı bilgileriyle (user) doldurarak getiriyoruz
+    const comments = await Comment.find({post : req.params.id}).populate("user");
+    res.status(200).json({ status: "succses", data: comments })
 })

@@ -4,7 +4,8 @@ const postSchema = new Schema(
     {
         user:{
             required:true,
-            type:Schema.ObjectId
+            type:Schema.ObjectId,
+            ref: "User"
         },
         title: {
             type: String,

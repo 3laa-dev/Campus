@@ -3,7 +3,16 @@ const app = express();
 
 const mongoose = require("mongoose");
 const path = require("path");
+const fs = require("fs");
 require("dotenv").config();
+
+// Yükleme dizinlerinin otomatik oluşturulması
+["uploads/images", "uploads/files"].forEach((dir) => {
+  const fullPath = path.join(__dirname, dir);
+  if (!fs.existsSync(fullPath)) {
+    fs.mkdirSync(fullPath, { recursive: true });
+  }
+});
 
 const http = require("http");
 const { Server } = require("socket.io");

@@ -145,14 +145,19 @@ exports.forgotPassword = asyncHandler(async (req, res, next) => {
   await user.save();
 
 
+  // E-postayı sıfırlama kodunu göndermek üzere asenkron olarak bekleyip gönderiyoruz
   try {
-    sendMail({ message: `Hi ${user.name} your reset code is: ${resetCode}`, email: user.email, subject: "this code invalid on 10 minuts" });
+    await sendMail({ 
+      message: `Hi ${user.name} your reset code is: ${resetCode}`, 
+      email: user.email, 
+      subject: "this code invalid on 10 minuts" 
+    });
   } catch (err) {
     user.passwordResetCode = undefined;
     user.passwordResetExpires = undefined;
     user.passwordResetVerified = undefined;
     await user.save();
-    return next(new Error("Error in sending email"));
+    return next(new Error("E-posta gönderilirken bir hata oluştu: " + err.message));
   }
 
   res
