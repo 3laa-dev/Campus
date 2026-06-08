@@ -28,6 +28,7 @@ const likeRoute = require("./routes/likeRoute");
 const commentRoute = require("./routes/commetRoute");
 const messagesRoute = require("./routes/messagesRoute");
 const searchRoute = require("./routes/searchRoute");
+const statsRoute = require("./routes/statsRoute");
 
 const User = require("./models/userModel");
 const Message = require("./models/messageModel");
@@ -46,6 +47,7 @@ app.use("/like", likeRoute);
 app.use("/comment" ,commentRoute);
 app.use("/messages",messagesRoute);
 app.use("/search", searchRoute);
+app.use("/stats", statsRoute);
 
 app.use((error, req, res, next) => {
   res.status(error.statusCode || 500).json({
