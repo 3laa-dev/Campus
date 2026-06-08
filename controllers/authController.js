@@ -148,27 +148,21 @@ exports.forgotPassword = asyncHandler(async (req, res, next) => {
   await user.save();
 
 
-  // E-postayı sıfırlama kodunu göndermek üzere asenkron olarak bekleyip gönderiyoruz
-  try {
-    await sendMail({ 
-      message: `Hi ${user.name} your reset code is: ${resetCode}`, 
-      email: user.email, 
-      subject: "this code invalid on 10 minuts" 
-    });
-    
-    res.status(201).json({ 
-      status: "success", 
-      message: "Reset Code sent to email" 
-    });
-  } catch (err) {
-    console.log("SMTP Hatası oluştu, fallback olarak debugCode dönülüyor:", err.message);
-    // E-posta gönderilemese bile kodu sıfırlamıyoruz, response içerisinde debugCode olarak dönüyoruz
-    res.status(200).json({ 
-      status: "success", 
-      message: "Şifre sıfırlama kodu oluşturuldu (SMTP Çevrimdışı)", 
-      debugCode: resetCode 
-    });
-  }
+  // E-postayı arka planda (non-blocking) göndermeyi dene
+  sendMail({ 
+    message: `Hi ${user.name} your reset code is: ${resetCode}`, 
+    email: user.email, 
+    subject: "this code invalid on 10 minuts" 
+  }).catch(err => {
+    console.log("Arka planda SMTP Hatası oluştu:", err.message);
+  });
+
+  // E-posta işleminin bitmesini beklemeden (sunucuyu asılı bırakmadan) doğrudan response dönüyoruz.
+  res.status(200).json({ 
+    status: "success", 
+    message: "Şifre sıfırlama kodu oluşturuldu", 
+    debugCode: resetCode 
+  });
 
 })
 
