@@ -4,8 +4,13 @@ const noteSchema = mongoose.Schema({
 
     user: {
         required: true,
-        type: mongoose.Schema.ObjectId
+        type: mongoose.Schema.ObjectId,
+        ref: 'User'
     }, 
+    title: {
+        type: String,
+        default: ''
+    },
     course: {
         type: String,
         required: true
@@ -13,9 +18,17 @@ const noteSchema = mongoose.Schema({
     description: {
         type: String
     },
+    docType: {
+        type: String,
+        default: 'Not'
+    },
+    semester: {
+        type: String,
+        default: ''
+    },
     classNum: {
         type: Number,
-        required: true
+        default: 1
     },
     rate: {
         type: Number,
@@ -25,7 +38,15 @@ const noteSchema = mongoose.Schema({
         type: String,
         required: true
     },
+    fileSizeMb: {
+        type: String,
+        default: ''
+    },
     ratesQuantity: {
+        type: Number,
+        default: 0
+    },
+    pages: {
         type: Number,
         default: 0
     }

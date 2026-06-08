@@ -31,8 +31,27 @@ router
     auth.allowedTo("student"),
     up.single("file"),
     (req, res, next) => {
+      if (!req.file) {
+        return res.status(400).json({ message: "PDF dosyası gerekli" });
+      }
       req.body.file = req.file.filename;
       req.body.user = req.user._id;
+      req.body.fileSizeMb = (req.file.size / (1024 * 1024)).toFixed(2);
+      
+      try {
+          const fs = require('fs');
+          const buffer = fs.readFileSync(req.file.path);
+          const content = buffer.toString('utf8');
+          const matches = content.match(/\/Type[\s]*\/Page[^s]/g);
+          req.body.pages = matches ? matches.length : 1;
+      } catch (err) {
+          req.body.pages = 1;
+      }
+
+      const parsedClass = parseInt(req.body.classNum, 10);
+      req.body.classNum = Number.isFinite(parsedClass) && parsedClass > 0
+          ? parsedClass
+          : 1;
       next();
     },
     controller.createNote
