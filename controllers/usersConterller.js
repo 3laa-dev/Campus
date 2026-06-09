@@ -28,12 +28,20 @@ exports.getMe = asyncHandler(async (req, res, next) => {
 exports.updateMe = asyncHandler(async (req, res, next) => {
     // Filter allowed update fields
     const filteredBody = {};
-    const allowedFields = ["name", "username", "title", "bio", "profileImage"];
-    Object.keys(req.body).forEach(key => {
-        if (allowedFields.includes(key)) {
+    const allowedFields = ["name", "username", "title", "bio"];
+    
+    allowedFields.forEach(key => {
+        if (req.body[key] !== undefined) {
             filteredBody[key] = req.body[key];
         }
     });
+
+    // Only update profileImage if a new file was uploaded
+    if (req.file) {
+        filteredBody.profileImage = req.file.filename;
+    } else if (req.body.profileImage === "delete" || req.body.profileImage === null) {
+        filteredBody.profileImage = null;
+    }
 
     const updatedUser = await User.findByIdAndUpdate(req.user._id, filteredBody, {
         new: true,
