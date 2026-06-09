@@ -12,7 +12,8 @@ const Comment = require("../models/commentModel");
 
 // Gönderiyi paylaşan kullanıcının bilgilerini (user) doldurarak getiriyoruz
 exports.getAllPosts = asyncHandler(async (req, res, next) => {
-    const posts = await Post.find().populate("user");
+    const posts = await Post.find().sort({ createdAt: -1 }).populate("user");
+
     
     const augmentedPosts = await Promise.all(posts.map(async (post) => {
         const likesCount = await Like.countDocuments({ post: post._id });
