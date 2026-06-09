@@ -36,7 +36,7 @@ exports.updateMe = asyncHandler(async (req, res, next) => {
         }
     });
 
-    // Only update profileImage if a new file was uploaded
+    // Profil resmi yalnızca yeni bir dosya yüklenirse güncellenir
     if (req.file) {
         filteredBody.profileImage = req.file.filename;
     } else if (req.body.profileImage === "delete" || req.body.profileImage === null) {
