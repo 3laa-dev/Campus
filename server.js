@@ -48,6 +48,10 @@ app.use("/comment" ,commentRoute);
 app.use("/messages",messagesRoute);
 app.use("/search", searchRoute);
 app.use("/stats", statsRoute);
+app.use("/test", (req, res) => {
+  res.json({ message: "API is working" });
+});
+
 
 app.use((error, req, res, next) => {
   res.status(error.statusCode || 500).json({
