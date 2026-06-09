@@ -48,6 +48,11 @@ app.use("/comment" ,commentRoute);
 app.use("/messages",messagesRoute);
 app.use("/search", searchRoute);
 app.use("/stats", statsRoute);
+app.use("/test", (req, res) => {
+  res.json({ message: "Test route working" });
+}); 
+
+
 
 
 app.use((error, req, res, next) => {
