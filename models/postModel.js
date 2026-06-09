@@ -21,6 +21,10 @@ const postSchema = new Schema(
             type: String,
             enum: ["makale", "soru"],
             required: true
+        },
+        solved: {
+            type: Boolean,
+            default: false
         }
         
     }

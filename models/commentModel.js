@@ -19,6 +19,10 @@ const commentSchema = new mongoose.Schema(
       ref: "Post",
       required: true,
     },
+    isSolution: {
+      type: Boolean,
+      default: false,
+    },
   },
   { timestamps: true }
 );
