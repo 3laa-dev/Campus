@@ -6,7 +6,13 @@ const asyncHandler = require("express-async-handler");
 
 exports.getAllUsers =  factory.getAll(User);
 
-exports.getUser = factory.getOne(User);
+exports.getUser = asyncHandler(async (req, res, next) => {
+    const user = await User.findById(req.params.id).select("-password -passwordResetCode -passwordResetExpires -passwordResetVerified");
+    if (!user) {
+        return next(new Error("User not found"));
+    }
+    res.status(200).json({ status: "succses", data: user });
+});
 
 exports.updateUser = factory.updateOne(User);
 
