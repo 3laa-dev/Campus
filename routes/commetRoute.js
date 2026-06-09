@@ -22,14 +22,7 @@ router.post(
 router.get(
     "/:id",
     commentController.getAllCommentsOnPost
-);
-
-router.put(
-  "/:commentId/solution",
-  auth.protect,
-  auth.allowedTo("student"),
-  commentController.toggleCommentSolution
-);
+)
 
 
 
